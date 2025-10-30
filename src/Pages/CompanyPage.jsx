@@ -2,8 +2,9 @@ import React, { useEffect } from 'react';
 import { Button } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import { IconArrowLeft } from '@tabler/icons-react';
-import Company from '../CompanyProfile/Company';
-import SimilarCompany from '../CompanyProfile/SimilarCompany';
+
+import Company from './../CompanyProfile/Company';
+import SimilarCompany from './../CompanyProfile/SimilarCompany';
 
 const CompanyPage = () => {
   const navigate = useNavigate();

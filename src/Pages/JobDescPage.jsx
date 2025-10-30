@@ -1,9 +1,10 @@
 import { Button, Divider } from '@mantine/core'
 import { IconArrowLeft } from '@tabler/icons-react'
 import { Link } from 'react-router-dom'
-
-import RecommendedJob from '../JobDesc/RecommendedJob'
 import JobDesc from './../JobDesc/JobDesc';
+import RecommendedJob from './../JobDesc/RecommendedJob';
+
+
 
 
 

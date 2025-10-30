@@ -1,7 +1,9 @@
 import React from 'react'
-import Profile from '../Profile/Profile'
+
 import { Divider } from '@mantine/core'
 import { profile } from '../../public/Data/TalentData'
+import Profile from './../TalentProfile/Profile';
+
 
 
 

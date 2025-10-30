@@ -1,5 +1,6 @@
 import PostedJobDesc from "../PostedJob/PostedJobDesc";
-import PostJob from "../PostJob/PostJob";
+
+import PostJob from './../PostJob/PostJob';
 
 const PostJobPage = () => {
   return (

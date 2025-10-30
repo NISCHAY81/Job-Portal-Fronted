@@ -1,6 +1,7 @@
 import React from "react";
 import { companyData } from "../../public/Data/Company";
 
+
 const AboutComp = () => {
   const company = companyData;
 

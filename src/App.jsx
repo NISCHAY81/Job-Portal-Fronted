@@ -4,22 +4,23 @@ import {createBrowserRouter, RouterProvider} from "react-router-dom"
 
 import {  MantineProvider} from '@mantine/core';
 import '@mantine/carousel/styles.css';
-import HomePage from './Pages/HomePage';
-import FindJobs from './Pages/FindJobs';
-import AppLayout from './AppLayout/AppLayout';
-import FindTalent from './Pages/FindTalent';
-import TalentProfilePage from './Pages/TalentProfilePage';
-import PostJobPage from './Pages/PostJobPage';
-import JobDescPage from './Pages/JobDescPage';
-import ApplyJobPage from './Pages/ApplyJobPage';
-import CompanyPage from './Pages/CompanyPage';
-import PostedJob from './Pages/PostedJob';
+import '@mantine/notifications/styles.css';
 import '@mantine/dates/styles.css'
 import 'dayjs/locale/en'; // your locale
+
+import AppLayout from './AppLayout/AppLayout';
+import HomePage from './Pages/HomePage';
+import FindJobs from './Pages/FindJobs';
+import FindTalent from './Pages/FindTalent';
+import JobDescPage from './Pages/JobDescPage';
+import TalentProfilePage from './Pages/TalentProfilePage';
+import PostJobPage from './Pages/PostJobPage';
+import CompanyPage from './Pages/CompanyPage';
+import PostedJob from './Pages/PostedJob';
 import JobHistoryPage from './Pages/JobHistoryPage';
-import SignUpPage from './Pages/SignUpPage';
-import Login from './SignUpLogin/Login';
 import ProfilePage from './Pages/ProfilePage';
+import ApplyJobPage from './Pages/ApplyJobPage';
+import SignUpPage from './Pages/SignUpPage';
 
 
 
