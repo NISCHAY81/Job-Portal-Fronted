@@ -9,10 +9,11 @@ import 'dayjs/locale/en';
 
 
 import App from './App.jsx';
+import { Notifications } from '@mantine/notifications';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <MantineProvider withGlobalStyles withNormalizeCSS defaultColorScheme="dark"> {/* or "light" */}
+    <MantineProvider withGlobalStyles withNormalizeCSS defaultColorScheme="dark"> 
       <App />
     </MantineProvider>
   </StrictMode>

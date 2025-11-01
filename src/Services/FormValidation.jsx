@@ -24,4 +24,25 @@ const signUpValidation = (name, value) => {
       return "";
   }
 };
-export {signUpValidation};
+
+const loginValidation = (name, value)=>{
+switch (name) {
+    case "name":
+      if (value.trim().length === 0) return "Name is required.";
+      return "";
+ case "password":
+      if (value.trim().length === 0) return "Password is required.";
+      if (
+        !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,15}$/.test(
+          value
+        )
+      )
+        return "Password must be 8–15 characters and include uppercase, lowercase, number, and special character.";
+      return "";
+
+    default:
+      return "";
+  }
+}
+
+export {signUpValidation,loginValidation};
