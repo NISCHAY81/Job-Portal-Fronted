@@ -1,43 +1,58 @@
-import { Anchor, Button, Checkbox, PasswordInput, rem, TextInput } from '@mantine/core'
-import { IconAt, IconLock } from '@tabler/icons-react'
-import { useState } from 'react'
+import {
+  Anchor,
+  Button,
+  Checkbox,
+  LoadingOverlay,
+  PasswordInput,
+  rem,
+  TextInput,
+} from "@mantine/core";
+import { IconAt, IconLock } from "@tabler/icons-react";
+import { useState } from "react";
 import { loginValidation } from "../Services/FormValidation";
-import { Link } from 'react-router-dom'
-import { loginUser } from '../Services/UserService'
-import { useNavigate } from 'react-router-dom';
-import { notifications } from '@mantine/notifications';
-import { IconX, IconCheck } from '@tabler/icons-react';
-import { useDisclosure } from '@mantine/hooks';
-import ResetPassword from './ResetPassword';
-const form={
- 
-  email:"",
-  password:""
-}
-const Login = () => {
-const [data, setData] = useState(form);
-  const [formError, setFormError] = useState(form);
-  const [opened,{open, close}] = useDisclosure(false);
-   const navigate = useNavigate();
-    const handleChange=(event)=>{
-      setFormError({...formError, [event.target.name]:""})
-       setData({...data,[event.target.name]:event.target.value})
-    }
+import { Link } from "react-router-dom";
+import { loginUser } from "../Services/UserService";
+import { useNavigate } from "react-router-dom";
+import { notifications } from "@mantine/notifications";
+import { IconX, IconCheck } from "@tabler/icons-react";
+import { useDisclosure } from "@mantine/hooks";
+import ResetPassword from "./ResetPassword";
+import { useDispatch } from "react-redux";
+import { setUser } from "../Slices/UserSlice";
 
-    const handleSubmit=()=> {
-        let valid = true;
+const form = {
+  email: "",
+  password: "",
+};
+const Login = () => {
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const [data, setData] = useState(form);
+  const [formError, setFormError] = useState(form);
+  const [opened, { open, close }] = useDisclosure(false);
+  const navigate = useNavigate();
+  const handleChange = (event) => {
+    setFormError({ ...formError, [event.target.name]: "" });
+    setData({ ...data, [event.target.name]: event.target.value });
+  };
+
+  const handleSubmit = () => {
+   
+    let valid = true;
     const newFormError = {};
     for (let key in data) {
       if (key !== "confirmPassword")
         newFormError[key] = loginValidation(key, data[key]);
       else if (data[key] !== data["password"])
-      if (newFormError[key]) valid = false;
+        if (newFormError[key]) valid = false;
     }
     setFormError(newFormError);
-    if(valid){
-      loginUser(data).then((res)=>{
-        console.log(res);
-         notifications.show({
+    if (valid) {
+       setLoading(true);
+      loginUser(data)
+        .then((res) => {
+          console.log(res);
+          notifications.show({
             title: "Login Successful",
             message: "Redirecting to Home page...",
             withCloseButton: true,
@@ -46,11 +61,16 @@ const [data, setData] = useState(form);
             withBorder: true,
             className: "!border-green-500",
           });
+
           setTimeout(() => {
+            setLoading(false);
+            dispatch(setUser(res));
             navigate("/");
           }, 4000);
-      }).catch((err)=>{
-         notifications.show({
+        })
+        .catch((err) => {
+          setLoading(false);
+          notifications.show({
             title: "Login Failed",
             message: err.response.data.errorMessage,
             withCloseButton: true,
@@ -59,52 +79,68 @@ const [data, setData] = useState(form);
             withBorder: true,
             className: "!border-red-500",
           });
-      });
-      }
+        });
     }
+  };
   return (
     <>
-
+     <LoadingOverlay
+          visible={loading}
+          zIndex={1000}
+          overlayProps={{ radius: 'sm', blur: 2 }}
+          loaderProps={{ color: 'brightSun.4', type: 'bars' }}
+        />
       <div className="w-1/2 px-20 flex flex-col justify-center gap-3 ">
-      <div className="text-3xl font-semibold mb-6">Login </div>
-  
-     <TextInput
-      name="email"
-      rror={formError.email}
-     value={data.email}
-     onChange={handleChange}
-     leftSectionPointerEvents="none"
-     leftSection={<IconAt style={{width: rem(16), height: rem(16)}}/>}
-     label="Your email"
-     placeholder="Your email"
-     withAsterisk
-    
-     />
-     <PasswordInput withAsterisk
-     value={data.password}
-     name="password"
-     onChange={handleChange}
-     leftSection={<IconLock style={{width: rem(18), height: rem(18)}}/>}
-     label="Password" placeholder="Password"
-      error={formError.password}
-     />
-     
-     <Button onClick={handleSubmit} autoContrast variant="filled">Login</Button>
-     <div className="mx-auto">Don't have an account?  <span
-          onClick={() => {
-            navigate("/signup");
-            setData(form);
-            setFormError(form);
-          }}
-          className="text-bright-sun-400 underline hover:underline cursor-pointer"
-        >
-          SignUp
-        </span></div>
-        <div onClick={open} className='text-bright-sun-400 hover:underline cursor-pointer text-center'>Forget Password</div>
-    </div>
-    <ResetPassword opened={opened} close={close}/>
-        </>
-  )
-}
+        <div className="text-3xl font-semibold mb-6">Login </div>
 
-export default Login
+        <TextInput
+          name="email"
+          rror={formError.email}
+          value={data.email}
+          onChange={handleChange}
+          leftSectionPointerEvents="none"
+          leftSection={<IconAt style={{ width: rem(16), height: rem(16) }} />}
+          label="Your email"
+          placeholder="Your email"
+          withAsterisk
+        />
+        <PasswordInput
+          withAsterisk
+          value={data.password}
+          name="password"
+          onChange={handleChange}
+          leftSection={<IconLock style={{ width: rem(18), height: rem(18) }} />}
+          label="Password"
+          placeholder="Password"
+          error={formError.password}
+        />
+
+        <Button loading={loading} onClick={handleSubmit} autoContrast variant="filled">
+          Login
+        </Button>
+        <div className="mx-auto">
+          Don't have an account?{" "}
+          <span
+            onClick={() => {
+              navigate("/signup");
+              setData(form);
+              setFormError(form);
+            }}
+            className="text-bright-sun-400 underline hover:underline cursor-pointer"
+          >
+            SignUp
+          </span>
+        </div>
+        <div
+          onClick={open}
+          className="text-bright-sun-400 hover:underline cursor-pointer text-center"
+        >
+          Forget Password
+        </div>
+      </div>
+      <ResetPassword opened={opened} close={close} />
+    </>
+  );
+};
+
+export default Login;

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Anchor, Button, Checkbox, Group,  PasswordInput, Radio, rem, TextInput } from "@mantine/core";
+import { Anchor, Button, Checkbox, Group,  LoadingOverlay,  PasswordInput, Radio, rem, TextInput } from "@mantine/core";
 import { IconAt, IconCheck, IconLock, IconX } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../Services/UserService";
@@ -15,6 +15,7 @@ const form = {
 };
 
 const SignUp = () => {
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState(form);
   const [formError, setFormError] = useState(form);
   const navigate = useNavigate();
@@ -52,6 +53,7 @@ const SignUp = () => {
   };
 
   const handleSubmit = () => {
+   
     let valid = true;
     const newFormError = {};
     for (let key in data) {
@@ -66,6 +68,7 @@ const SignUp = () => {
     setFormError(newFormError);
 
     if (valid === true) {
+      setLoading(true);
       registerUser(data)
         .then((res) => {
           console.log(res);
@@ -80,10 +83,12 @@ const SignUp = () => {
             className: "!border-green-500",
           });
           setTimeout(() => {
+            setLoading(false);
             navigate("/login");
           }, 4000);
         })
         .catch((err) => {
+          setLoading(false);
           notifications.show({
             title: "Registration Failed",
             message: err.response.data.errorMessage,
@@ -98,6 +103,14 @@ const SignUp = () => {
   };
 
   return (
+    <>
+    <LoadingOverlay
+              className="translate-x-1/2"
+              visible={loading}
+              zIndex={1000}
+              overlayProps={{ radius: 'sm', blur: 2 }}
+              loaderProps={{ color: 'brightSun.4', type: 'bars' }}
+            />
     <div className="w-1/2 px-20 flex flex-col justify-center gap-3 ">
       <div className="text-3xl font-semibold mb-6">Create Account</div>
 
@@ -176,7 +189,7 @@ const SignUp = () => {
         }
       />
 
-      <Button onClick={handleSubmit} autoContrast variant="filled">
+      <Button loading={loading} onClick={handleSubmit} autoContrast variant="filled">
         SignUp
       </Button>
 
@@ -194,6 +207,7 @@ const SignUp = () => {
         </span>
       </div>
     </div>
+    </>
   );
 };
 

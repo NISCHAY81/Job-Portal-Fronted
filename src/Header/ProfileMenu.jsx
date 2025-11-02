@@ -3,25 +3,30 @@ import { Link } from "react-router-dom";
 import { Menu, Avatar, Switch, rem, Divider } from "@mantine/core";
 import {
   IconMessageCircle,
-  IconTrash,
-  IconArrowsLeftRight,
   IconUserCircle,
   IconFileText,
   IconMoonStars,
   IconSun,
   IconLogout2,
 } from "@tabler/icons-react";
+import { useDispatch, useSelector } from "react-redux";
+import { removeUser } from "../Slices/UserSlice";
 
 
 const ProfileMenu = () => {
+  const dispatch = useDispatch();
+  const user=useSelector((state)=>state.user)
   const [checked, setChecked] = useState(false);
   const [opened, setOpended] = useState(false)
+  const handleLogout=()=>{
+    dispatch(removeUser());
+  }
 
   return (
     <Menu shadow="md" width={200} opened={opened} onChange={setOpended}>
       <Menu.Target>
         <div className="flex items-center gap-2 cursor-pointer">
-          <div>Sonar</div>
+          <div>{user.name}</div>
           <Avatar
             src="./avatar.png"
             alt="it's me"
@@ -71,7 +76,9 @@ const ProfileMenu = () => {
         </div>
 
         <Menu.Divider />
-        <Menu.Item color="red" leftSection={<IconLogout2 size={14} />}>
+        <Menu.Item 
+       onClick={handleLogout}
+       color="red" leftSection={<IconLogout2 size={14} />}>
         Logout
         </Menu.Item>
       </Menu.Dropdown>

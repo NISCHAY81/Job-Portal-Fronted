@@ -22,6 +22,12 @@ import JobHistoryPage from "./Pages/JobHistoryPage";
 import ProfilePage from "./Pages/ProfilePage";
 import ApplyJobPage from "./Pages/ApplyJobPage";
 import SignUpPage from "./Pages/SignUpPage";
+import Store from "./Store";
+import { Provider } from "react-redux";
+
+import PublicRoute from "./Routes/PublicRoute";
+import ProtectedRoute from "./Routes/ProtectedRoute";
+
 
 const App = () => {
   const theme = createTheme({
@@ -59,34 +65,61 @@ const App = () => {
     },
   });
 
-  const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <AppLayout />,
-      children: [
-        { path: "/", element: <HomePage /> },
-        { path: "/find-jobs", element: <FindJobs /> },
-        { path: "/find-talent", element: <FindTalent /> },
-        { path: "/jobs", element: <JobDescPage /> },
-        { path: "/talent-profile", element: <TalentProfilePage /> },
-        { path: "/post-job", element: <PostJobPage /> },
-        { path: "/company", element: <CompanyPage /> },
-        { path: "/posted-job", element: <PostedJob /> },
-        { path: "/job-history", element: <JobHistoryPage /> },
-        { path: "/profile", element: <ProfilePage /> },
-      ],
-    },
-    { path: "/apply-job", element: <ApplyJobPage /> },
-    { path: "/signup", element: <SignUpPage /> },
-    { path: "/login", element: <SignUpPage /> },
-  ]);
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: (
+      <ProtectedRoute>
+        <AppLayout />
+      </ProtectedRoute>
+    ),
+    children: [
+      { path: "/", element: <HomePage /> },
+      { path: "/find-jobs", element: <FindJobs /> },
+      { path: "/find-talent", element: <FindTalent /> },
+      { path: "/jobs", element: <JobDescPage /> },
+      { path: "/talent-profile", element: <TalentProfilePage /> },
+      { path: "/post-job", element: <PostJobPage /> },
+      { path: "/company", element: <CompanyPage /> },
+      { path: "/posted-job", element: <PostedJob /> },
+      { path: "/job-history", element: <JobHistoryPage /> },
+      { path: "/profile", element: <ProfilePage /> },
+    ],
+  },
+  {
+    path: "/apply-job",
+    element: (
+      <ProtectedRoute>
+        <ApplyJobPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/signup",
+    element: (
+      <PublicRoute>
+        <SignUpPage />
+      </PublicRoute>
+    ),
+  },
+  {
+    path: "/login",
+    element: (
+      <PublicRoute>
+        <SignUpPage /> 
+      </PublicRoute>
+    ),
+  },
+]);
+
 
   return (
+    <Provider store={Store}>
     <MantineProvider defaultColorScheme="dark" theme={theme}>
-      {/* ✅ Notifications mounted globally */}
       <Notifications position="top-center" autoClose={4000} zIndex={1000} />
       <RouterProvider router={router} />
     </MantineProvider>
+    </Provider>
   );
 };
 
