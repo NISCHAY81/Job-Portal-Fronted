@@ -95,7 +95,7 @@ const Login = () => {
 
         <TextInput
           name="email"
-          rror={formError.email}
+          error={formError.email}
           value={data.email}
           onChange={handleChange}
           leftSectionPointerEvents="none"

@@ -69,36 +69,36 @@ const SignUp = () => {
 
     if (valid === true) {
       setLoading(true);
-      registerUser(data)
-        .then((res) => {
-          console.log(res);
-          setData(form);
-          notifications.show({
-            title: "Registered Successfully",
-            message: "Redirecting to login page...",
-            withCloseButton: true,
-            icon: <IconCheck style={{ width: "90%", height: "90%" }} />,
-            color: "teal",
-            withBorder: true,
-            className: "!border-green-500",
-          });
-          setTimeout(() => {
-            setLoading(false);
-            navigate("/login");
-          }, 4000);
-        })
-        .catch((err) => {
-          setLoading(false);
-          notifications.show({
-            title: "Registration Failed",
-            message: err.response.data.errorMessage,
-            withCloseButton: true,
-            icon: <IconX style={{ width: "90%", height: "90%" }} />,
-            color: "red",
-            withBorder: true,
-            className: "!border-red-500",
-          });
-        });
+   registerUser(data)
+  .then((res) => {
+    console.log(res);
+    setData(form);
+    notifications.show({
+      title: "Registered Successfully",
+      message: "Redirecting to login page...",
+      withCloseButton: true,
+      icon: <IconCheck style={{ width: "90%", height: "90%" }} />,
+      color: "teal",
+      withBorder: true,
+      className: "!border-green-500",
+    });
+    setLoading(false);
+    console.log("Navigating to login...");
+    navigate("/login");
+  })
+  .catch((err) => {
+    setLoading(false);
+    notifications.show({
+      title: "Registration Failed",
+      message: err?.response?.data?.errorMessage || "Something went wrong",
+      withCloseButton: true,
+      icon: <IconX style={{ width: "90%", height: "90%" }} />,
+      color: "red",
+      withBorder: true,
+      className: "!border-red-500",
+    });
+  });
+
     }
   };
 
