@@ -1,5 +1,6 @@
 import { ActionIcon } from "@mantine/core"
 import {  IconTrash } from "@tabler/icons-react"
+import { formatDate } from "../Services/Utlities"
 
 const CertiCard = (props) => {
   return (
@@ -17,8 +18,8 @@ const CertiCard = (props) => {
         </div>
         <div className="flex flex-col items-end gap-2">
         <div className='flex flex-col items-end'>
-         <div className='text-sm text-mine-shaft-300'>{props.issueDate}</div>
-         <div className='text-sm text-mine-shaft-300'>{props.certificateId}</div>
+         <div className='text-sm text-mine-shaft-300'>Issued: {formatDate(props.issueDate)}</div>
+         <div className='text-sm text-mine-shaft-300'>ID: {props.certificateId}</div>
         </div>
         {props.edit && <ActionIcon variant='subtle' color='red.8' size="lg" >
         <IconTrash className='h-4/5 w-4/5'  stroke={1.5}/>
