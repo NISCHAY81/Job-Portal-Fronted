@@ -1,9 +1,19 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Sort from './Sort'
 import JobCard from './JobCard'
-import { jobList } from '../../public/Data/JobsData'
+import { getAllJobs } from '../Services/JobService';
+
 
 const Job = () => {
+  const[jobList, setJobList] = useState([{}]);
+  useEffect(()=>{
+    getAllJobs().then((res)=>{
+      setJobList(res);
+    }).catch((err)=>{
+      console.log(err);
+      
+    })
+  },[])
   return (
     <div className='p-6 md:p-10 bg-mine-shaft-950 min-h-screen text-mine-shaft-100'>
     

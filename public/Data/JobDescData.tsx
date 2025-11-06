@@ -6,10 +6,10 @@ import {
 } from "@tabler/icons-react";
 
 const card = [
-  { name: "Location", icon: IconMapPin, value: "New York" },
-  { name: "Experience", icon: IconBriefcase, value: "Expert" },
-  { name: "Salary", icon: IconPremiumRights, value: "48 LPA" },
-  { name: "Job Type", icon: IconRecharging, value: "Full Time" },
+  { name: "Location", icon: IconMapPin, value: "New York",id:"location"},
+  { name: "Experience", icon: IconBriefcase, value: "Expert", id:"experience" },
+  { name: "Salary", icon: IconPremiumRights, value: "48 LPA", id:"packageOffered" },
+  { name: "Job Type", icon: IconRecharging, value: "Full Time", id:"jobType" },
 ];
 const skills = [
   "React",

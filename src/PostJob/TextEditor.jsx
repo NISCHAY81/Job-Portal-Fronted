@@ -1,19 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 
-export default function SimpleTextEditor() {
-  const [value, setValue] = useState(
-    ``
-  );
+const TextEditor = (props) => {
+  const { form } = props;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-      <label htmlFor="editor" style={{ fontWeight: "bold" }}>
-        
-      </label>
       <textarea
         id="editor"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
+        value={form.values.description || ""}
+        onChange={(e) => form.setFieldValue("description", e.target.value)}
         rows={10}
         style={{
           width: "100%",
@@ -24,6 +19,13 @@ export default function SimpleTextEditor() {
           resize: "vertical",
         }}
       />
+      {form.errors.description && (
+        <span style={{ color: "red", fontSize: "14px" }}>
+          {form.errors.description}
+        </span>
+      )}
     </div>
   );
-}
+};
+
+export default TextEditor;

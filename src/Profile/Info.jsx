@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { IconBriefcase, IconDeviceFloppy, IconMapPin, IconPencil } from '@tabler/icons-react';
+import { IconBriefcase, IconCheck, IconDeviceFloppy, IconMapPin, IconPencil, IconX } from '@tabler/icons-react';
 import { ActionIcon } from '@mantine/core';
 import fields from '../../public/Data/Profile';
 import SelectInput from './SelectInput';
@@ -10,6 +10,7 @@ import { changeProfile } from '../Slices/ProfileSlice';
 import { successNotification } from '../Services/NotificationService';
 
 
+
 const Info = () => {
      const select = fields;
      const dispatch = useDispatch();
@@ -17,6 +18,12 @@ const Info = () => {
      const profile = useSelector((state)=>state.profile);
        const [edit, setEdit] = useState(false);
 
+       const handleSave =()=>{
+                  setEdit(false)
+          let updatedProfile={...profile, ...form.getValues()}
+          dispatch(changeProfile(updatedProfile))
+         successNotification("Sucess", "Profile updated Successfully");
+       }
        const handleEdit=()=>{
         if(!edit){
           setEdit(true)
@@ -24,10 +31,6 @@ const Info = () => {
         }
         else{
           setEdit(false)
-          let updatedProfile={...profile, ...form.getValues()}
-          dispatch(changeProfile(updatedProfile))
-         successNotification("Sucess", "Profile updated Successfully");
-         setEdit(!edit);
         }
        }
          const form = useForm({
@@ -38,14 +41,25 @@ const Info = () => {
     <>
           <div className="text-3xl font-semibold flex justify-between items-center">
           {user.name}
+          <div>
+          {edit && <ActionIcon
+            variant="subtle"
+            color="green.8"
+            size="lg"
+            onClick={ handleSave}
+          >
+            {edit ? <IconCheck /> : <IconDeviceFloppy className="h-4/5 w-4/5" />}
+          </ActionIcon>}
+
           <ActionIcon
             variant="subtle"
-            color="brightSun.4"
+            color={edit?"red.8":"brightSun.4"}
             size="lg"
             onClick={ handleEdit}
           >
-            {edit ? <IconDeviceFloppy /> : <IconPencil className="h-4/5 w-4/5" />}
+            {edit ? <IconX /> : <IconPencil className="h-4/5 w-4/5" />}
           </ActionIcon>
+          </div>
         </div>
 
         {edit ? (

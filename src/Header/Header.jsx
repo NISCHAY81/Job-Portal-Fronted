@@ -1,14 +1,28 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { IconBell,  IconSettings, IconAnchor } from '@tabler/icons-react';
 import {  Avatar, Button, Indicator } from '@mantine/core';
 import NavLinks from './NavLinks';
 import { Link, NavLink } from 'react-router-dom';
 import ProfileMenu from './ProfileMenu';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { getProfile } from '../Services/ProfileService';
+import { setProfile } from '../Slices/ProfileSlice';
 
 
 const Header = () => {
-  const user=useSelector((state)=>state.user)
+   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    
+    getProfile(user.profileId)
+      .then((res) => {
+        dispatch(setProfile(res))
+        
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
   return (
     <div className='w-full h-28 text-white px-6 lg:px-20 py-4 flex justify-between items-center'>
      <NavLink to = "/">

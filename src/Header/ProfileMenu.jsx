@@ -15,7 +15,7 @@ import { removeUser } from "../Slices/UserSlice";
 
 const ProfileMenu = () => {
   const dispatch = useDispatch();
-  const user=useSelector((state)=>state.user)
+  const profile=useSelector((state)=>state.profile)
   const [checked, setChecked] = useState(false);
   const [opened, setOpended] = useState(false)
   const handleLogout=()=>{
@@ -26,12 +26,13 @@ const ProfileMenu = () => {
     <Menu shadow="md" width={200} opened={opened} onChange={setOpended}>
       <Menu.Target>
         <div className="flex items-center gap-2 cursor-pointer">
-          <div>{user.name}</div>
-          <Avatar
-            src="./avatar.png"
-            alt="it's me"
-            className="h-10 w-10 rounded-full"
-          />
+          <div>{profile.name}</div>
+        <Avatar
+  src={profile.picture ? `data:image/jpeg;base64,${profile.picture}` : "./avatar.png"}
+  alt="it's me"
+  className="h-10 w-10 rounded-full"
+/>
+
         </div>
       </Menu.Target>
 

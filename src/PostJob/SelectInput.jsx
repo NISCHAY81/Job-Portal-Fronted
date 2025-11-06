@@ -5,6 +5,8 @@ import { Combobox, InputBase, ScrollArea, useCombobox } from '@mantine/core';
 const SelectInput=(props)=> {
     useEffect(()=>{
      setData(props.options)
+     setValue(props.form.getInputProps(props.name).value || '');
+     setSearch(props.form.getInputProps(props.name).value  || '');
     },[])
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
@@ -18,7 +20,7 @@ const SelectInput=(props)=> {
   const filteredOptions = exactOptionMatch
     ? data
     : data.filter((item) =>
-        item.toLowerCase().includes(search.toLowerCase().trim())
+        item.toLowerCase().includes(search?.toLowerCase().trim())
       );
 
   const options = filteredOptions.map((item) => (
@@ -38,13 +40,15 @@ const SelectInput=(props)=> {
         } else {
           setValue(val);
           setSearch(val);
+          props.form.setFieldValue(props.name,val)
         }
 
         combobox.closeDropdown();
       }}
     >
       <Combobox.Target>
-        <InputBase withAsterisk className='[&_input]:font-medium'
+        <InputBase withAsterisk
+        {...props.form.getInputProps(props.name)} 
         label={props.label}
           rightSection={<Combobox.Chevron />}
           value={search}
@@ -68,7 +72,7 @@ const SelectInput=(props)=> {
         <Combobox.Options>
           <ScrollArea.Autosize mah={200} type='scroll'> 
           {options}
-          {!exactOptionMatch && search.trim().length > 0 && (
+          {!exactOptionMatch && search?.trim().length > 0 && (
             <Combobox.Option value="$create">
               + Create {search}
             </Combobox.Option>

@@ -1,12 +1,59 @@
 import React from 'react';
 import SelectInput from './SelectInput';
 import { fields } from '../../public/Data/PostJob';
-import { Button, TagsInput } from '@mantine/core'; 
+import { Button, NumberInput, TagsInput, Textarea } from '@mantine/core'; 
 import TextEditor from './TextEditor';
+import { isNotEmpty, useForm } from '@mantine/form';
+import { errorNotification, successNotification } from '../Services/NotificationService';
+import { postJob } from '../Services/JobService';
+import { useNavigate } from 'react-router-dom';
 
 
 const PostJob = () => {
+   
+  const navigate = useNavigate();
   const select = fields;
+   const form = useForm({
+   mode:'controlled',
+   validateInputOnChange:true,
+   initialValues:{
+    jobTitle:'',
+    company:'',
+    experience:'',
+    jobType:'',
+    location:'',
+    packageOffered:'',
+    skillsRequired:[],
+    about:'',
+    description:''
+   },
+   validate:{
+    jobTitle: isNotEmpty('Title is required'),
+    company: isNotEmpty('company is required'),
+    experience: isNotEmpty('experience is required'),
+    jobType: isNotEmpty('jobType is required'),
+    location: isNotEmpty('location is required'),
+    packageOffered: isNotEmpty('packageOffered is required'),
+    skillsRequired: isNotEmpty('skillsRequired is required'),
+    about: isNotEmpty('about is required'),
+    description: isNotEmpty('Description in required')
+   }
+   });
+ const handlePost = () => {
+  const validation = form.validate();
+  if (validation.hasErrors) return;
+
+  postJob(form.getValues())
+    .then((res) => {
+      successNotification("Success", "Job Posted Successfully");
+      navigate("/posted-job")
+    })
+    .catch((err) => {
+      console.error(err);
+      errorNotification("Error", err.response?.data?.errorMessage || "Something went wrong");
+    });
+};
+
 
   return (
     <div className="w-4/5 mx-auto">
@@ -14,21 +61,28 @@ const PostJob = () => {
 
       <div className="flex flex-col gap-5">
         <div className="flex gap-10 [&>*]:w-1/2">
-          <SelectInput {...select[0]} />
-          <SelectInput {...select[1]} />
+          <SelectInput form={form} name="jobTitle"{...select[0]} />
+          <SelectInput form={form} name="company"{...select[1]} />
         </div>
 
         <div className="flex gap-10 [&>*]:w-1/2">
-          <SelectInput {...select[2]} />
-          <SelectInput {...select[3]} />
+          <SelectInput form={form} name="experience"{...select[2]} />
+          <SelectInput form={form} name="jobType"{...select[3]} />
         </div>
 
         <div className="flex gap-10 [&>*]:w-1/2">
-          <SelectInput {...select[4]} />
-          <SelectInput {...select[5]} />
+          <SelectInput form={form} name="location"{...select[4]} />
+        <NumberInput 
+        {...form.getInputProps('packageOffered')}
+        label="salary" withAsterisk placeholder='Enter Salary' 
+        min={1}
+        max={300}
+        clampBehavior='strict'
+        hideControls/>
         </div>
 
         <TagsInput
+        {...form.getInputProps('skillsRequired')}
         withAsterisk
           label="Skills"
           placeholder="Enter skill"
@@ -36,12 +90,20 @@ const PostJob = () => {
           acceptValueOnBlur
           splitChars={[',',' ','|']}
         />
+             <Textarea
+                {...form.getInputProps("about")}
+                withAsterisk
+                label="About Job"
+                autosize
+                minRows={3}
+                placeholder="Enter about Job"
+              />
         <div>
-          <div className='text-sm font-medium'>Job Description</div>
-          <TextEditor/>
+          <div className='text-sm font-medium'>Job Description <span className='text-red-500'>*</span></div>
+          <TextEditor form={form}/>
         </div>
       <div className='flex gap-2'>
-         <Button color="brightSun.4" variant="light">Publish</Button>
+         <Button onClick={handlePost} color="brightSun.4" variant="light">Publish</Button>
           <Button  color="brightSun.4" variant="outline">Save as Draft</Button>
       </div>
       </div>

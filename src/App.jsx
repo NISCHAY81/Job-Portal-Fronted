@@ -77,17 +77,17 @@ const router = createBrowserRouter([
       { path: "/", element: <HomePage /> },
       { path: "/find-jobs", element: <FindJobs /> },
       { path: "/find-talent", element: <FindTalent /> },
-      { path: "/jobs", element: <JobDescPage /> },
+      { path: "/jobs/:id", element: <JobDescPage /> },
       { path: "/talent-profile", element: <TalentProfilePage /> },
       { path: "/post-job", element: <PostJobPage /> },
-      { path: "/company", element: <CompanyPage /> },
+      { path: "/company/:name", element: <CompanyPage /> },
       { path: "/posted-job", element: <PostedJob /> },
       { path: "/job-history", element: <JobHistoryPage /> },
       { path: "/profile", element: <ProfilePage /> },
     ],
   },
   {
-    path: "/apply-job",
+    path: "/apply-job/:id",
     element: (
       <ProtectedRoute>
         <ApplyJobPage />
