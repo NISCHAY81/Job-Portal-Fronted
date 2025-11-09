@@ -1,13 +1,27 @@
-import React from 'react'
+import React from "react";
+import { Link, useParams } from "react-router-dom";
+import { timeAgo } from "../Services/Utlities";
 
 const PostedJobCard = (props) => {
+  const { id } = useParams();
   return (
-    <div className='bg-mine-shaft-900 rounded-xl p-2 border-l-2 border-l-bright-sun-400'>
-      <div className='text-sm font-semibold'>{props.jobTitle}</div>
-      <div className='text-xs  text-mine-shaft-300 font-semibold'>{props.location}</div>
-      <div className='text-xs text-mine-shaft-300'>{props.posted}</div>
-    </div>
-  )
-}
+    <Link
+      to={`/posted-jobs/${props.id}`}
+      className={`bg-mine-shaft-900 rounded-xl p-2 border-l-2  hover:bg-opacity-80 cursor-pointer border-l-bright-sun-400 ${
+        props.id == id
+          ? "bg-bright-sun-400 text-black"
+          : "bg-mine-shaft-900 text-mine-shaft-300"
+      }`}
+    >
+      <div className="text-sm font-semibold">{props.jobTitle}</div>
+      <div className="text-xs  text-mine-shaft-300 font-semibold">
+        {props.location}
+      </div>
+      <div className="text-xs text-mine-shaft-300">
+        {timeAgo(props.postTime)}
+      </div>
+    </Link>
+  );
+};
 
-export default PostedJobCard
+export default PostedJobCard;

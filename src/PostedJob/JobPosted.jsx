@@ -1,27 +1,31 @@
 import { Tabs } from '@mantine/core'
-import { activeJobs } from '../../public/Data/PostedJob'
 import PostedJobCard from './PostedJobCard'
+import { useEffect, useState } from 'react';
 
-const JobPosted = () => {
+const JobPosted = (props) => {
+  const [activeTab, setActiveTab] = useState('ACTIVE');
+ useEffect(() => {
+   setActiveTab(props.jobs?.jobStatus || 'ACTIVE')
+ }, [props.job]);
   return (
     <div className='w-1/6 mt-5'>
       <div className='text-2xl font font-semibold mb-5'>Jobs</div>
       <div>
-           <Tabs autoContrast variant='pills' defaultValue='active'>
+           <Tabs autoContrast variant='pills' value={activeTab} onChange={setActiveTab}>
       <Tabs.List className='[&_button[aria-selected="false"]]:bg-mine-shaft-900 font-medium'>
-        <Tabs.Tab value="active">Active [4]</Tabs.Tab>
-        <Tabs.Tab value="draft">Draft [1]</Tabs.Tab>
+        <Tabs.Tab value="ACTIVE">Active [{props.jobList?.filter((job)=>job?.jobStatus=="ACTIVE").length}]</Tabs.Tab>
+        <Tabs.Tab value="DRAFT">Draft [{props.jobList?.filter((job)=>job?.jobStatus=="DRAFT").length}]</Tabs.Tab>
       </Tabs.List>
+          </Tabs>
 
-      <Tabs.Panel value="active">
+
         <div className='flex flex-col gap-5 mt-5 '>
         {
-        activeJobs.map((item,index)=><PostedJobCard key={index} {...item}/>)
+        props.jobList?.filter((job)=>job?.jobStatus==activeTab).map((item,index)=><PostedJobCard key={index} {...item}/>)
         }
         </div>
-      </Tabs.Panel>
-      <Tabs.Panel value="draft">Second panel</Tabs.Panel>
-    </Tabs>
+ 
+
       </div>
     </div>
   )

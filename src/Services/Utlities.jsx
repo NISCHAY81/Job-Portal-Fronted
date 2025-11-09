@@ -30,4 +30,20 @@ const timeAgo = (time) => {
   }
 };
 
-export { formatDate, timeAgo };
+const getBase64 = (file) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      const result = reader.result;
+      const base64Data = result.split(",")[1]; // ✅ removes data:application/pdf;base64,
+      resolve(base64Data);
+    };
+    reader.onerror = (error) => reject(error);
+  });
+};
+
+
+
+
+export { formatDate, timeAgo , getBase64};

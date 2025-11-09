@@ -1,12 +1,12 @@
 import { Button, Divider, Text } from '@mantine/core'
 import { IconBookmark, IconBookmarkFilled, IconCalendar, IconClockHour3 } from '@tabler/icons-react'
 import { Link } from 'react-router-dom'
+import About from './../Profile/About';
+import { timeAgo } from '../Services/Utlities';
 
 const Card = (props) => {
   return (
-    <Link to="/jobs" className='bg-mine-shaft-900 hover:bg-mine-shaft-850 transition-colors duration-200 p-5 w-full max-w-xs flex flex-col gap-4 rounded-2xl shadow-md hover:shadow-lg border border-mine-shaft-800'>
-      
-    
+    <div  className='bg-mine-shaft-900 hover:bg-mine-shaft-850 transition-colors duration-200 p-5 w-full max-w-xs flex flex-col gap-4 rounded-2xl shadow-md hover:shadow-lg border border-mine-shaft-800'>
       <div className='flex justify-between items-start'>
         <div className='flex gap-3 items-center'>
           <div className='p-2 bg-mine-shaft-800 rounded-md'>
@@ -15,7 +15,9 @@ const Card = (props) => {
           <div>
             <div className='font-semibold text-bright-sun-400 text-sm'>{props.jobTitle}</div>
             <div className='text-xs text-mine-shaft-400'>
-              {props.company} • {props.applicants} applicants
+                {Array.isArray(props.applicants)
+                ? `${props.applicants.length} applicants`
+                : `${props.applicants || 0} applicants`} applicants
             </div>
           </div>
         </div>
@@ -30,7 +32,7 @@ const Card = (props) => {
       
       <div>
         <Text className='!text-xs text-justify !text-mine-shaft-300 leading-relaxed' lineClamp={3}>
-          {props.description}
+          {props.about}
         </Text>
         <Divider size="xs" color='mineShaft.7' className='mt-3'/>
       </div>
@@ -38,12 +40,12 @@ const Card = (props) => {
      
       <div className='flex justify-between items-center text-sm'>
         <div className='font-semibold text-bright-sun-400'>
-          ₹ {props.package}
+          ₹ {props.packageOffered} LPA
         </div>
         <div className='flex gap-1 items-center text-mine-shaft-400'>
           <IconClockHour3 className='h-4 w-4' stroke={1.5}/> 
           {props.applied?"Applied":props.offered?"Interviewed":"Posted"}-
-          {props.postedDaysAgo} days ago
+          {timeAgo(props.postTime)}
         </div>
       </div>
       {props.offered && 
@@ -57,7 +59,12 @@ const Card = (props) => {
           <IconCalendar className='text-bright-sun-400 w-5 h-5' stroke={1.5} />sun, 25 August 2024 <span className='text-mine-shaft-400'> 10:00 AM</span>
         </div>
       }
-    </Link>
+     <Link to={`/jobs/${props.id}`}>
+        <Button fullWidth color="brightSun.4" variant="outline">
+          View Job
+        </Button>
+      </Link>
+    </div>
   )
 }
 

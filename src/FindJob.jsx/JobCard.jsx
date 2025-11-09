@@ -1,13 +1,29 @@
-import { Divider, Text } from '@mantine/core'
-import { IconBookmark, IconClockHour3 } from '@tabler/icons-react'
+import { Button, Divider, Text } from '@mantine/core'
+import { IconBookmark, IconBookmarkFilled, IconClockHour3 } from '@tabler/icons-react'
 import { Link } from 'react-router-dom'
 import { timeAgo } from '../Services/Utlities';
+import { useDispatch, useSelector } from 'react-redux';
+import { changeProfile } from '../Slices/ProfileSlice';
 
 
 const JobCard = (props) => {
+  const dispatch = useDispatch();
+  const profile = useSelector((state)=>state.profile);
+
+  const handleSaveJob=()=>{
+    let savedJobs=[...(profile.savedJobs || [])];
+    if(savedJobs?.includes(props.id)) {
+      savedJobs=savedJobs?.filter((id)=>id!==props.id);
+    }
+    else {
+      savedJobs=[...savedJobs, props.id];
+    }
+    let updatedProfile = {...profile,savedJobs:savedJobs};
+    dispatch(changeProfile(updatedProfile))
+  }
+
   return (
-    <Link
-      to={`/jobs/${props.id}`}
+    <div
       className="bg-mine-shaft-900 hover:bg-mine-shaft-850 transition-colors duration-200 p-5 w-full max-w-xs flex flex-col gap-4 rounded-2xl shadow-md hover:shadow-lg border border-mine-shaft-800"
     >
       <div className="flex justify-between items-start">
@@ -31,7 +47,11 @@ const JobCard = (props) => {
             </div>
           </div>
         </div>
-        <IconBookmark className="text-mine-shaft-400 cursor-pointer hover:text-bright-sun-400 transition-colors duration-150" />
+        {profile.savedJobs?.includes(props.id) ? (
+          <IconBookmarkFilled onClick={handleSaveJob} className="text-bright-sun-400 cursor-pointer" />
+        ) : (
+          <IconBookmark onClick={handleSaveJob} className="text-mine-shaft-400 cursor-pointer hover:text-bright-sun-400 transition-colors duration-150" />
+        )}
       </div>
 
       <div className="flex flex-wrap gap-2 text-xs">
@@ -65,7 +85,12 @@ const JobCard = (props) => {
            Posted {timeAgo(props.postTime)}
         </div>
       </div>
-    </Link>
+      <Link to={`/jobs/${props.id}`}>
+        <Button fullWidth color="brightSun.4" variant="outline">
+          View Job
+        </Button>
+      </Link>
+    </div>
   );
 };
 

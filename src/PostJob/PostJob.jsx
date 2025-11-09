@@ -7,10 +7,11 @@ import { isNotEmpty, useForm } from '@mantine/form';
 import { errorNotification, successNotification } from '../Services/NotificationService';
 import { postJob } from '../Services/JobService';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 
 const PostJob = () => {
-   
+   const user = useSelector((state)=>state.user)
   const navigate = useNavigate();
   const select = fields;
    const form = useForm({
@@ -39,18 +40,31 @@ const PostJob = () => {
     description: isNotEmpty('Description in required')
    }
    });
+
  const handlePost = () => {
   const validation = form.validate();
   if (validation.hasErrors) return;
 
-  postJob(form.getValues())
+  postJob({...form.getValues(),postedBy:user.id,jobStatus:"ACTIVE"} )
     .then((res) => {
       successNotification("Success", "Job Posted Successfully");
-      navigate("/posted-job")
+     navigate(`/posted-jobs/${res.id}`)
     })
     .catch((err) => {
       console.error(err);
-      errorNotification("Error", err.response?.data?.errorMessage || "Something went wrong");
+      errorNotification("Error", err.response?.data?.errorMessage);
+    });
+};
+
+ const handleDraft = () => {
+  postJob({...form.getValues(),postedBy:user.id,jobStatus:"DRAFT"} )
+    .then((res) => {
+      successNotification("Success", "Job Drafted  Successfully");
+      navigate(`/posted-jobs/${res.id}`)
+    })
+    .catch((err) => {
+      console.error(err);
+      errorNotification("Error", err.response?.data?.errorMessage );
     });
 };
 
@@ -104,7 +118,7 @@ const PostJob = () => {
         </div>
       <div className='flex gap-2'>
          <Button onClick={handlePost} color="brightSun.4" variant="light">Publish</Button>
-          <Button  color="brightSun.4" variant="outline">Save as Draft</Button>
+          <Button  color="brightSun.4" variant="outline" onClick={handleDraft}>Save as Draft</Button>
       </div>
       </div>
     </div>
