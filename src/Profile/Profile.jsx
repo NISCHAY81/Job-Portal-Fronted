@@ -26,6 +26,7 @@ import Certificate from './Certificate';
 import { useHover } from '@mantine/hooks';
 import { successNotification } from '../Services/NotificationService';
 import { getBase64} from '../Services/Utlities'
+
 const Profile = () => {
   
   // const [about, setAbout] = useState(props.about);
@@ -36,6 +37,7 @@ const Profile = () => {
   const user = useSelector((state) => state.user);
   const profile = useSelector((state) => state.profile); 
   const dispatch = useDispatch();
+  
   useEffect(() => {
     console.log(profile);
     getProfile(user.profileId)

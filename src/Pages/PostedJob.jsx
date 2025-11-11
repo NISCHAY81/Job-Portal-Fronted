@@ -19,6 +19,7 @@ const PostedJob = () => {
     getJobPostedBy(user.id)
       .then((res) => {
         setJobList(res);
+        if(res && res.length>0 && Number(id)==0)navigate(`/posted-jobs/${res[0].id}`)
         setJob(res.find((item) => item.id == id));
         
       })

@@ -24,7 +24,7 @@ const ApplicationForm = () => {
       phone: '',
       website: '',
       resume: {},
-      about: ''
+      coverLetter: ''
     },
     validate: {
       name: isNotEmpty('Name cannot be empty'),
@@ -40,7 +40,7 @@ const ApplicationForm = () => {
     setSubmit(true);
     try {
       let resume = await getBase64(form.getValues().resume);
-      let applicant = { ...form.getValues(), applicantId: user.id, resume: resume.split(',')[1] };
+      let applicant = { ...form.getValues(), applicantId: user.id, resume: resume }; // ✅ fixed line (removed split)
 
       await applyJob(id, applicant);
       setSubmit(false);
@@ -134,7 +134,7 @@ const ApplicationForm = () => {
 
         <div className="mb-8">
           <Textarea
-            {...form.getInputProps('about')}
+            {...form.getInputProps('coverLetter')}
             withAsterisk
             readOnly={preview}
             variant={preview ? "unstyled" : "default"}

@@ -2,58 +2,113 @@ import { Button, Divider } from '@mantine/core'
 import { IconBriefcase, IconMapPin } from '@tabler/icons-react'
 import ExpCard from './ExpCard'
 import CertiCard from './CertiCard'
+import { useParams } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { getProfile } from '../Services/ProfileService'
 
-const Profile = (props) => {
+const Profile = () => {
+  const { id } = useParams();
+  const [profile, setProfile] = useState({});
+
+  useEffect(() => {
+    window.scroll(0, 0);
+    getProfile(id)
+      .then((res) => {
+        setProfile(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [id]);
+
   return (
-    <div className='w-3/4'>
-    <div className='relative'>
-      <img className='rounded-t-2xl' src="/Profile/banner.jpg" alt="" />
-      <img className='w-45 h-45 rounded-full absolute -bottom-1/3 left-3 border-mine-shaft-950 border-8'  src="/avatar.png" alt="" />
-    </div>
-      <div className='px-3 mt-18'>
-        <div className='text-3xl font-semibold flex justify-between'>{props.name} <Button color="brightSun.4 " variant="light" >Message</Button></div>
-         <div className='text-xl flex gap-1 items-center'><IconBriefcase className='h-5 w-5 ' stroke={1.5}/>{props.role} &bull; {props.company} </div>
-         <div className='text-lg gap-1 flex items-center text-mine-shaft-400' ><IconMapPin className='h-5 w-' stroke={1.5}/>{props.location}</div>
+    <div className="w-3/4">
+      {/* Header */}
+      <div className="relative">
+       <img
+  className="w-full h-[40rem] object-cover object-center rounded-t-2xl"
+  src={profile.picture ? `data:image/jpeg;base64,${profile.picture}` : './avatar.png'}
+  alt="Profile Cover"
+/>
+        <img
+          className="w-44 h-44 rounded-full absolute -bottom-20 left-6 border-8 border-mine-shaft-950 object-cover shadow-lg"
+          src={profile.picture ? `data:image/jpeg;base64,${profile.picture}` : './avatar.png'}
+          alt="Profile Avatar"
+        />
       </div>
-      <Divider mx="xs" my="xl"/>
-      <div className='px-3'>
-        <div className='text-2xl font-semibold'>About</div>
-        <div className='text-sm text-mine-shaft-300 text-justify'>{props.about}</div>
-      </div>
-      <Divider mx="xs" my="xl"/>
-       <div className='px-3'>
-        <div className='text-2xl font-semibold'>Skills</div>
-        <div className='flex flex-wrap gap-2'>
-          {
-            props.skills.map((skills, index)=>
-            <div key={index} className="bg-bright-sun-300/15 rounded-3xl text-sm font-medium text-bright-sun-400 px-3 py-1">
- {skills}
-</div> )
-          }
+
+      {/* Basic Info */}
+      <div className="px-6 mt-24">
+        <div className="text-3xl font-semibold flex justify-between items-center">
+          <span>{profile.name || 'Unnamed User'}</span>
+          <Button color="brightSun.4" variant="light">
+            Message
+          </Button>
+        </div>
+
+        <div className="text-xl flex gap-2 items-center mt-2">
+          <IconBriefcase className="h-5 w-5" stroke={1.5} />
+          <span>{profile.jobTitle || 'No Title'} &bull; {profile.company || 'No Company'}</span>
+        </div>
+
+        <div className="text-lg gap-2 flex items-center text-mine-shaft-400 mt-1">
+          <IconMapPin className="h-5 w-5" stroke={1.5} />
+          <span>{profile.location || 'No Location'}</span>
         </div>
       </div>
-       <Divider mx="xs" my="xl"/>
-       <div className='px-3'>
-        <div className='text-2xl font-semibold mb-3'>Experience</div>
-    <div className="flex flex-col gap-8">
-  {props.experience.map((exp, index) => (
-    <ExpCard key={index} {...exp} />
-  ))}
-</div>
 
-       </div>
-        <Divider mx="xs" my="xl"/>
-       <div className='px-3'>
-        <div className='text-2xl font-semibold mb-3'>Certifications</div>
-  <div className="flex flex-col gap-8">
-  {props.certifications.map((certi, index) => (
-    <CertiCard key={index} {...certi} />
-  ))}
-</div>
+      <Divider mx="xs" my="xl" />
 
-       </div>
+      {/* About */}
+      <div className="px-6">
+        <div className="text-2xl font-semibold mb-2">About</div>
+        <div className="text-sm text-mine-shaft-300 text-justify leading-relaxed">
+          {profile.about || 'No description available.'}
+        </div>
+      </div>
+
+      <Divider mx="xs" my="xl" />
+
+      {/* Skills */}
+      <div className="px-6">
+        <div className="text-2xl font-semibold mb-2">Skills</div>
+        <div className="flex flex-wrap gap-2">
+          {profile.skills?.map((skill, index) => (
+            <div
+              key={index}
+              className="bg-bright-sun-300/15 rounded-3xl text-sm font-medium text-bright-sun-400 px-3 py-1"
+            >
+              {skill}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <Divider mx="xs" my="xl" />
+
+      {/* Experience */}
+      <div className="px-6">
+        <div className="text-2xl font-semibold mb-3">Experience</div>
+        <div className="flex flex-col gap-8">
+          {profile.experiences?.map((exp, index) => (
+            <ExpCard key={index} {...exp} />
+          ))}
+        </div>
+      </div>
+
+      <Divider mx="xs" my="xl" />
+
+      {/* Certifications */}
+      <div className="px-6 mb-10">
+        <div className="text-2xl font-semibold mb-3">Certifications</div>
+        <div className="flex flex-col gap-8">
+          {profile.certifications?.map((certi, index) => (
+            <CertiCard key={index} {...certi} />
+          ))}
+        </div>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;

@@ -43,7 +43,44 @@ const getBase64 = (file) => {
   });
 };
 
+const formatInterviewTime = (dateStr) => {
+  const date = new Date(dateStr);
+  const formattedDate = date.toLocaleString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+    timeZone: 'Asia/Kolkata' 
+  });
+  return formattedDate;
+};
 
+/**
+ * ✅ Opens a base64 resume (PDF or JPG) in a new browser tab.
+ * Automatically detects file type.
+ */
+const openBase64InNewTab = (base64Data, fileType = "pdf") => {
+  let mimeType;
 
+  if (fileType === "pdf") mimeType = "application/pdf";
+  else if (fileType === "jpg" || fileType === "jpeg") mimeType = "image/jpeg";
+  else if (fileType === "png") mimeType = "image/png";
+  else mimeType = "application/octet-stream";
 
-export { formatDate, timeAgo , getBase64};
+  // Convert base64 string to binary
+  const byteCharacters = atob(base64Data);
+  const byteNumbers = new Array(byteCharacters.length);
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
+  }
+  const byteArray = new Uint8Array(byteNumbers);
+  const blob = new Blob([byteArray], { type: mimeType });
+
+  // Create temporary URL and open it
+  const blobUrl = URL.createObjectURL(blob);
+  window.open(blobUrl, "_blank");
+};
+
+export { formatDate, timeAgo, getBase64, formatInterviewTime, openBase64InNewTab };
