@@ -79,7 +79,7 @@ const router = createBrowserRouter([
       { path: "/find-talent", element: <FindTalent /> },
       { path: "/jobs/:id", element: <JobDescPage /> },
       { path: "/talent-profile/:id", element: <TalentProfilePage /> },
-      { path: "/post-job", element: <PostJobPage /> },
+      { path: "/post-job/:id", element: <PostJobPage /> },
       { path: "/company/:name", element: <CompanyPage /> },
       { path: "/posted-jobs/:id", element: <PostedJob /> },
       { path: "/job-history", element: <JobHistoryPage /> },

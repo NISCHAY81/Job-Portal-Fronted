@@ -1,12 +1,33 @@
 import { Badge, Tabs } from '@mantine/core';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import JobDesc from '../JobDesc/JobDesc';
 import TalentCard from '../FindTalent/TalentCard';
 
 const PostedJobDesc = (props) => {
-  
-console.log("applicationStatus:", props.applicants);
+  const [tab, setTab] = useState("overview");
+  const[arr, setArr] = useState([]);
+  const handleTabChange=(value)=>{
+    setTab(value);
+    if(value=="applicants"){
+      setArr(props.applicants?.filter((x) => x.applicationStatus === "APPLIED"))
+    }
+    else if (value=="invited"){
+      setArr(props.applicants?.filter((x) => x.applicationStatus === "INTERVIEWING"))
+    }
+    else if(value=="offered"){
+      setArr(props.applicants?.filter((x) => x.applicationStatus === "OFFERED"))
+    }
+    else if(value == 'rejected'){
+      setArr(props.applicants?.filter((x) => x.applicationStatus === "REJECTED"))
+    }
+    else {
+      setArr([])
+    }
+  }
 
+  useEffect(() => {
+    handleTabChange("overview");
+  }, [props]);
   return (
     <div className="mt-5 w-3/4 px-5">
     {props.jobTitle?<>
@@ -19,7 +40,7 @@ console.log("applicationStatus:", props.applicants);
       <div className="font-medium text-mine-shaft-300">{props.location}</div>
 
       <div>
-        <Tabs variant="outline" radius="lg" defaultValue="overview">
+        <Tabs variant="outline" radius="lg" value={tab} onChange={handleTabChange}>
           <Tabs.List className='[&_button]:text-lg font-semibold mb-5 [&_button[data-active="true"]]:text-bright-sun-400'>
             <Tabs.Tab value="overview">Overview</Tabs.Tab>
             <Tabs.Tab value="applicants">Applicants</Tabs.Tab>
@@ -29,57 +50,55 @@ console.log("applicationStatus:", props.applicants);
           </Tabs.List>
 
           <Tabs.Panel value="overview" className="[&>div]:w-full">
-            <JobDesc {...props} edit />
+           {props.jobStatus=="CLOSED"?<JobDesc {...props} closed ={props.jobStatus=="CLOSED"}/> :<JobDesc {...props} edit  />}
           </Tabs.Panel>
 
           {/* Applicants */}
           <Tabs.Panel value="applicants">
             <div className="flex mt-10 flex-wrap gap-5 justify-around">
-              {props.applicants
-                ?.filter((x) => x.applicationStatus === "APPLIED")
-                .map((talent, index) => 
+              {arr?.length?arr.map((talent, index) => 
                   <TalentCard key={index} {...talent}
-                  />)}
+                  />):
+                  <div className='text-2xl font-semibold'>No Applicants Applied</div>
+                  }
             </div>
           </Tabs.Panel>
 
           {/* Invited */}
           <Tabs.Panel value="invited">
             <div className="flex mt-10 flex-wrap gap-5 justify-around">
-              {props.applicants
-                ?.filter((x) => x.applicationStatus === "INTERVIEWING")
-                .map((talent, index) => 
+              {arr?.length?arr.map((talent, index) => 
                   <TalentCard
                     key={index}
                     {...talent}
                   />
-                )}
+                ):
+                <div className='text-2xl font-semibold'>No Invited Applicants</div>
+                }
             </div>
           </Tabs.Panel>
 
           <Tabs.Panel value="offered">
             <div className="flex mt-10 flex-wrap gap-5 justify-around">
-              {props.applicants
-                ?.filter((x) => x.applicationStatus === "OFFERED")
-                .map((talent, index) => 
+              {arr?.length?arr.map((talent, index) => 
                   <TalentCard
                     key={index}
                     {...talent}
                   />
-                )}
+                ):
+                <div className='text-2xl font-semibold'>No Applicant Offered</div>
+                }
             </div>
           </Tabs.Panel>
 
           <Tabs.Panel value="rejected">
             <div className="flex mt-10 flex-wrap gap-5 justify-around">
-              {props.applicants
-                ?.filter((x) => x.applicationStatus === "REJECTED")
-                .map((talent, index) => 
+              {arr?.length?arr.map((talent, index) => 
                   <TalentCard
                     key={index}
                     {...talent}
                   />
-                )}
+                ): <div className='text-2xl font-semibold'>No Applicant Rejected</div>}
             </div>
           </Tabs.Panel>
         </Tabs>

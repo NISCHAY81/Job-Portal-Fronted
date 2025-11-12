@@ -35,7 +35,7 @@ const Info = () => {
        }
          const form = useForm({
     mode: 'controlled',
-    initialValues: { jobTitle: '', company: '', location:''},
+    initialValues: { jobTitle: '', company: '', location:'', experience:''},
   });
   return (
     <>
@@ -69,6 +69,7 @@ const Info = () => {
               <SelectInput form={form} name="company" {...select[1]} />
             </div>
             <SelectInput form={form} name="location" {...select[2]} />
+               <SelectInput form={form} name="experience" {...select[3]} />
           </div>
         ) : (
           <div className="mt-4">

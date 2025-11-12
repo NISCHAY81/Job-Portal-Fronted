@@ -8,6 +8,8 @@ import DOMPurify from "dompurify";
 import { timeAgo } from "../Services/Utlities";
 import { useDispatch, useSelector } from "react-redux";
 import { changeProfile } from "../Slices/ProfileSlice";
+import { postJob } from "../Services/JobService";
+import { errorNotification, successNotification } from "../Services/NotificationService";
 
 const JobDesc = (props) => {
   const [applied, setApplied] = useState(false);
@@ -37,9 +39,17 @@ const JobDesc = (props) => {
     dispatch(changeProfile(updatedProfile));
   };
 
+  const handleClose=()=>{
+    postJob({...props, jobStatus:"CLOSED"}).then((res)=>{
+      successNotification("Job Closed Successfully")
+    }).catch((err)=>{
+      errorNotification("Error", err.response.data.errorMessage);
+    })
+  }
+
   return (
     <div className="w-2/3">
-      {/* Job header */}
+      {/* Job Header */}
       <div className="flex justify-between items-start">
         <div className="flex gap-3 items-center">
           <div className="p-3 bg-mine-shaft-800 rounded-xl">
@@ -60,10 +70,30 @@ const JobDesc = (props) => {
           </div>
         </div>
 
-        {/* Action buttons */}
+        {/* Action Buttons */}
         <div className="flex flex-col gap-2 items-center">
-          {/* Applicant view */}
-          {!props.edit && (
+          {/* EMPLOYER VIEW — Active Job */}
+          {props.edit && !props.closed && (
+  <>
+    <Link to={props.edit ? `/post-job/${props.id}` : `/apply-job/${props.id}`}>
+      <Button color="brightSun.4" variant="light" size="sm">
+        Edit
+      </Button>
+    </Link>
+    <Button color="red.5" variant="outline" size="sm" onClick={handleClose}>
+      Close
+    </Button>
+  </>
+)}
+          {/* EMPLOYER VIEW — Closed Job */}
+          {props.edit && props.closed && (
+            <Button color="brightSun.4" variant="light" size="sm">
+              Edit
+            </Button>
+          )}
+
+          {/* APPLICANT VIEW */}
+          {!props.edit && !props.closed && (
             applied ? (
               <Button color="green.8" variant="light" size="sm">
                 Applied
@@ -77,19 +107,9 @@ const JobDesc = (props) => {
             )
           )}
 
-          {/* Employer (edit) view */}
-          {props.edit && (
-            <>
-              <Button color="brightSun.4" variant="light" size="sm">
-                Edit
-              </Button>
-              <Button color="red.5" variant="outline" size="sm">
-                Delete
-              </Button>
-            </>
-          )}
+            
 
-          {/* Bookmark toggle */}
+          {/* BOOKMARK ICON — Applicant only */}
           {!props.edit && (
             profile.savedJobs?.includes(props.id) ? (
               <IconBookmarkFilled
@@ -152,19 +172,27 @@ const JobDesc = (props) => {
 
         <Divider my="xl" />
 
+        <div>
+           <div className="text-xl font-semibold mb-5">About Job</div>
+          <div className="text-mine-shaft-300 text-justify">
+         {props.about}
+        </div>
+        </div>
+           <Divider my="xl" />
         {/* Job Description */}
-        <div
-          className="[&_h4]:text-xl [&_*]:text-mine-shaft-300 [&_li]:marker:text-bright-sun-300 [&_h4]:my-5 [&_h4]:font-semibold [&_h4]:text-mine-shaft-200 [&_p]:text-justify"
+  <div>
+          <div className="text-xl font-semibold mb-5">Job Description</div>
+        <div className="[&_h4]:text-xl [&_*]:text-mine-shaft-300 [&_li]:marker:text-bright-sun-300 [&_h4]:my-5 [&_h4]:font-semibold [&_h4]:text-mine-shaft-200 [&_p]:text-justify"
           dangerouslySetInnerHTML={{ __html: data }}
         />
       </div>
+  </div>
 
       <Divider my="xl" />
 
       {/* Company Info */}
       <div>
         <div className="text-xl font-semibold mb-5">About the Company</div>
-
         <div className="flex justify-between items-start mb-3">
           <div className="flex gap-3 items-center">
             <div className="p-3 bg-mine-shaft-800 rounded-xl">
@@ -188,11 +216,7 @@ const JobDesc = (props) => {
         </div>
 
         <div className="text-mine-shaft-300 text-justify">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. At voluptates
-          commodi blanditiis ducimus nihil dolorum accusamus nesciunt. Veritatis
-          voluptatum suscipit impedit facere non perferendis esse natus, illum
-          fugit. Voluptatibus vel hic velit corporis eius architecto harum eos
-          exercitationem obcaecati dignissimos?
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus eos aliquam tempore quae iure repellat, modi voluptates nobis magni, beatae dignissimos, optio obcaecati minima. Illum quasi rem laboriosam doloremque corporis.
         </div>
       </div>
     </div>

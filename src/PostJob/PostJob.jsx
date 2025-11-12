@@ -1,19 +1,32 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import SelectInput from './SelectInput';
 import { fields } from '../../public/Data/PostJob';
 import { Button, NumberInput, TagsInput, Textarea } from '@mantine/core'; 
 import TextEditor from './TextEditor';
 import { isNotEmpty, useForm } from '@mantine/form';
 import { errorNotification, successNotification } from '../Services/NotificationService';
-import { postJob } from '../Services/JobService';
-import { useNavigate } from 'react-router-dom';
+import { getJobs, postJob } from '../Services/JobService';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 
 const PostJob = () => {
+  const{id} = useParams();
    const user = useSelector((state)=>state.user)
   const navigate = useNavigate();
   const select = fields;
+  useEffect(() => {
+    window.scrollTo(0,0);
+    if(id!=="0"){
+      getJobs(id).then((res)=>{
+        form.setValues(res);
+      }).catch((err)=>{
+        console.log(err);       
+      })
+    }
+    else
+      form.reset();
+  }, [id]);
    const form = useForm({
    mode:'controlled',
    validateInputOnChange:true,
@@ -45,7 +58,7 @@ const PostJob = () => {
   const validation = form.validate();
   if (validation.hasErrors) return;
 
-  postJob({...form.getValues(),postedBy:user.id,jobStatus:"ACTIVE"} )
+  postJob({...form.getValues(),id,postedBy:user.id,jobStatus:"ACTIVE"} )
     .then((res) => {
       successNotification("Success", "Job Posted Successfully");
      navigate(`/posted-jobs/${res.id}`)
@@ -57,7 +70,7 @@ const PostJob = () => {
 };
 
  const handleDraft = () => {
-  postJob({...form.getValues(),postedBy:user.id,jobStatus:"DRAFT"} )
+  postJob({...form.getValues(),id,postedBy:user.id,jobStatus:"DRAFT"} )
     .then((res) => {
       successNotification("Success", "Job Drafted  Successfully");
       navigate(`/posted-jobs/${res.id}`)
@@ -114,7 +127,7 @@ const PostJob = () => {
               />
         <div>
           <div className='text-sm font-medium'>Job Description <span className='text-red-500'>*</span></div>
-          <TextEditor form={form}/>
+          <TextEditor form={form} />
         </div>
       <div className='flex gap-2'>
          <Button onClick={handlePost} color="brightSun.4" variant="light">Publish</Button>

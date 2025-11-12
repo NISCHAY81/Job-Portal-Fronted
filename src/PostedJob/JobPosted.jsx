@@ -15,6 +15,7 @@ const JobPosted = (props) => {
       <Tabs.List className='[&_button[aria-selected="false"]]:bg-mine-shaft-900 font-medium'>
         <Tabs.Tab value="ACTIVE">Active [{props.jobList?.filter((job)=>job?.jobStatus=="ACTIVE").length}]</Tabs.Tab>
         <Tabs.Tab value="DRAFT">Draft [{props.jobList?.filter((job)=>job?.jobStatus=="DRAFT").length}]</Tabs.Tab>
+          <Tabs.Tab value="CLOSED">Closed [{props.jobList?.filter((job)=>job?.jobStatus=="CLOSED").length}]</Tabs.Tab>
       </Tabs.List>
           </Tabs>
 
